@@ -1,4 +1,4 @@
 # USACO
-My own usaco training codes
+Lucien's own USACO training codes repository.
 
 http://train.usaco.org
