@@ -12,7 +12,7 @@ LANG: C++
 
 using namespace std;
 const long long  MAX=2147483647;
-int n;
+int n, k5, k2;
 int product = 1;
 
 int main(int argc, char const *argv[])
@@ -22,10 +22,26 @@ int main(int argc, char const *argv[])
 	freopen("fact4.out","w",stdout);
 	cin>>n;
 	for(int i = 1;i<=n;++i){
-		product*=i;
-		while((product%10) == 0) product/=10;
-		product%=1000000;
+		int temp = i;
+		while(!(temp%5)) {
+			++k5;
+			temp/=5;
+		}
 	}
-	cout<<product%10<<endl;
+	k2 = k5;
+	for(int i = 2;i<=n;++i){
+		int temp = i;
+		while(!(temp%5) && k5){
+			temp/=5;
+			--k5;
+		}
+		while(!(temp%2) && k2){
+			temp/=2;
+			--k2;
+		}
+		product*=(temp%10);
+		product%=10;
+	}
+	cout<<product<<endl;
 	return 0;
 }
