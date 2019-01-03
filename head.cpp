@@ -23,10 +23,15 @@ LANG: C++
 
 using namespace std;
 const long long  MAX=2147483647;
-
+inline int read(){
+    int x=0, sign=1;
+    char ch = getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')sign=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9') x=x*10+ch-'0',ch=getchar();
+    return x*sign;
+}
 int main(int argc, char const *argv[])
 {
-	std::ios_base::sync_with_stdio(false);
 	freopen(".in","r",stdin);
 	freopen(".out","w",stdout);
 	
