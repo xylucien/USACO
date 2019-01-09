@@ -23,30 +23,26 @@ LANG: C++
 
 using namespace std;
 const long long  MAX=2147483647;
-int n,g, cow_info[100010];
+long long n,g, cow_info[100010];
 set<int> wall;
-map<int, int> myMap;
-int myMap_pointer = 0;
-int cur_peak, ans;
+int cur_peak, ans, MyM, discrete[100010];
 struct log
 {
-	int cow_id, change, day;
+	long long cow_id, change, day;
 	bool operator <(const log &x)const{
         return day < x.day;
     }
 }logs[100010];
 
 void refresh_wall(int x){
-	if(x == g) return;
-	for(int i = 1;i<=myMap_pointer;++i){
+	for(int i = 0;i<=MyM;++i){
 		if(cow_info[i] == x) wall.insert(i);
 	}
-	//cout<<"done"<<endl;	
 }
 
 int find_next_max(){
 	int myMax = 0;
-	for(int i = 0;i<=myMap_pointer;++i){
+	for(int i = 0;i<=MyM;++i){
 		if(cow_info[i] > myMax) myMax = cow_info[i];
 	}
 	return myMax;
@@ -55,48 +51,50 @@ int find_next_max(){
 int main(int argc, char const *argv[])
 {
 	freopen("measurement.in","r",stdin);
-	//freopen("measurement.out","w",stdout);
+	freopen("measurement.out","w",stdout);
 	cin>>n>>g;
-	cur_peak = g;
 	string temp_input;
 	for(int i = 0; i < n; ++i){
 		cin>>logs[i].day>>logs[i].cow_id>>temp_input;
+		discrete[i] = logs[i].cow_id;
 		int sign = (temp_input[0] == '+') ? 1 : -1;
 		logs[i].change = (sign * atoi((temp_input.substr(1)).c_str()));
 	}
+	sort(discrete,discrete+n);
+	MyM = unique(discrete,discrete+n) - discrete;
+	for(int i = 0;i<n;++i){
+		logs[i].cow_id = 1 + lower_bound(discrete,discrete+MyM,logs[i].cow_id) - discrete;
+		cow_info[logs[i].cow_id] = g;
+	}
+	for(int i = 0;i<=MyM;++i) wall.insert(i);
 	sort(logs,logs+n);
 	cow_info[0] = g;
+	cur_peak = g;
 	for(int i = 0;i<n;++i){
-		if(myMap.count(logs[i].cow_id) == 0){
-			myMap[logs[i].cow_id] = ++myMap_pointer;
-			cow_info[myMap_pointer] = g;
-		}
-		int cur_index = myMap[logs[i].cow_id];
+		int cur_index = logs[i].cow_id;
 		cow_info[cur_index] += logs[i].change;
 		auto x = wall.find(cur_index);
 		if(cow_info[cur_index] < cur_peak){
 			if(x != wall.end()){
-				cur_peak = find_next_max();
 				wall.erase(x);
 				if(wall.empty()){
+					cur_peak = find_next_max();
 					refresh_wall(cur_peak);
 					if(wall.size()!=1 || wall.find(cur_index) == wall.end()){
 						++ans;
-						cout<<"Day "<<i<<": recess "<<cur_index<<" with max "<<cur_peak<<endl;		
+						//cout<<"Day "<<i<<": recess "<<cur_index<<" with max "<<cur_peak<<endl;		
 					}
 				}
 				else{
 					++ans;
-					cout<<"Day "<<i<<": recess "<<cur_index<<" with max "<<cur_peak<<endl;
+					//cout<<"Day "<<i<<": recess "<<cur_index<<" with max "<<cur_peak<<endl;
 				}		
 			}
 		}
 		else if(cow_info[cur_index] == cur_peak){
-			if(cur_peak!=g){
-				++ans;
-				wall.insert(cur_index);	
-				cout<<"Day "<<i<<": remain "<<cur_index<<" with max "<<cur_peak<<endl;
-			}
+			++ans;
+			wall.insert(cur_index);	
+			//cout<<"Day "<<i<<": remain "<<cur_index<<" with max "<<cur_peak<<endl;
 		}
 		else{
 			if(x == wall.end() || wall.size()!=1){
@@ -104,12 +102,12 @@ int main(int argc, char const *argv[])
 				wall.clear();
 				wall.insert(cur_index);
 				cur_peak = cow_info[cur_index];
-				cout<<"Day "<<i<<": refresh "<<cur_index<<" with max "<<cur_peak<<endl;
+				//cout<<"Day "<<i<<": refresh "<<cur_index<<" with max "<<cur_peak<<endl;
 			}
 			else cur_peak = cow_info[cur_index];
 		}
 	}
-	cout<<wall.size()<<' '<<cur_peak<<endl;
+	//cout<<wall.size()<<' '<<cur_peak<<endl;
 	cout<<ans<<endl;
 	return 0;
 }

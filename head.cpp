@@ -22,7 +22,7 @@ LANG: C++
 #include<algorithm> 
 
 using namespace std;
-const long long  MAX=2147483647;
+const long long MAX = 2147483647;
 inline int read(){
     int x=0, sign=1;
     char ch = getchar();
