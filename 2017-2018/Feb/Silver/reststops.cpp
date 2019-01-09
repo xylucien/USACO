@@ -24,7 +24,7 @@ LANG: C++
 using namespace std;
 const long long MAX = 2147483647;
 
-int L,N,rf,rc;
+long long L,N,rf,rc;
 long long ans;
 bool flag = false;
 pair<int, int> info[100010];
@@ -39,7 +39,7 @@ inline int read(){
 int find_next_max(int x){
 	int Mymax = 0, pos;
 	for(int i = x; i<=N;++i){
-		if(info[i].second > Mymax){
+		if(info[i].second >= Mymax){
 			Mymax = info[i].second;
 			pos = i;
 		}
@@ -51,7 +51,7 @@ int find_next_max(int x){
 int main(int argc, char const *argv[])
 {
 	freopen("reststops.in","r",stdin);
-	//freopen("reststops.out","w",stdout);
+	freopen("reststops.out","w",stdout);
 	L = read();
 	N = read();
 	rf = read();
@@ -63,7 +63,7 @@ int main(int argc, char const *argv[])
 	}
 	while(!flag){
 		int next_goal = find_next_max(last_position+1);
-		ans += (info[next_goal].first - info[last_position].first) * (rf - rc) * info[next_goal].second;
+		ans += (long long)(info[next_goal].first - info[last_position].first) * (rf - rc) * (long long)info[next_goal].second;
 		last_position = next_goal;
 	}
 	cout<<ans<<endl;
