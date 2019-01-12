@@ -23,7 +23,8 @@ LANG: C++
 
 using namespace std;
 const long long MAX = 2147483647;
-int n, arr[100010], ans;
+int n, arr[100010], arr2[100010], ans = 10000000;
+bool visited[100010];
 inline int read(){
     int x=0, sign=1;
     char ch = getchar();
@@ -36,21 +37,14 @@ int main(int argc, char const *argv[])
 	freopen("sort.in","r",stdin);
 	freopen("sort.out","w",stdout);
 	n = read();
-	for(int i = 0;i<n;++i)arr[i] = read();
-	bool sorted = false;
-	while(!sorted){
-		sorted = true;
-		++ans;
-		for(int i = 0;i<n-1;++i){
-			if(arr[i+1] < arr[i]){
-				//int temp = arr[i+1];
-				//arr[i+1] = arr[i];
-				//arr[i] = temp;
-				swap(arr[i+1],arr[i]);
-				sorted = false;
-			}
-		}
+	for(int i = 0;i<n;++i) arr[i] = arr2[i] = read();
+	sort(arr2, arr2+n);
+	for(int i = 0;i<n;++i){
+		int pos = lower_bound(arr2, arr2+n, arr[i]) - arr2;
+		while(visited[pos]) ++pos;
+		visited[pos] = true;
+		ans = min(ans, pos-i);
 	}
-	cout<<ans<<endl;
+	cout<<abs(ans)+1<<endl;
 	return 0;
 }
