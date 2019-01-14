@@ -21,10 +21,27 @@ LANG: C++
 #include<string.h>  
 #include<algorithm> 
 
+#include<set>  
+#include<map>  
+#include<list>  
+#include<queue>  
+#include<stack>  
+#include<string>  
+#include<cmath>  
+#include<time.h>  
+#include<vector>  
+#include<bitset>  
+#include<memory>  
+#include<utility>  
+#include<stdio.h>  
+#include<iostream>  
+#include<stdlib.h>  
+#include<string.h>  
+#include<algorithm> 
+
 using namespace std;
-const long long MAX = 100010;
-int n, q;
-int info[100010];
+const long long  MAX=2147483647;
+#define N 100010
 inline int read(){
     int x=0, sign=1;
     char ch = getchar();
@@ -32,64 +49,45 @@ inline int read(){
     while(ch>='0'&&ch<='9') x=x*10+ch-'0',ch=getchar();
     return x*sign;
 }
-#define ll long long
-unsigned ll n,m,a[MAXN],ans[MAXN<<2],tag[MAXN<<2];
-inline ll ls(ll x)
-{
-    return x<<1;
+long long n,q,a[N],L[N],R[N],num=0,m,ans=0;
+struct node{
+    int len,covlen,is_covered;
+}mySegTree[N<<4];
+inline void pushup(int p){
+    if(mySegTree[p].is_covered) return;
+    mySegTree[p].covlen = mySegTree[p<<1].covlen + mySegTree[p<<1|1].covlen;
 }
-inline ll rs(ll x)
-{
-    return x<<1|1;
+inline void build(int p,int l,int r){
+    if(l==r){mySegTree[p].len=a[l+1]-a[l];return;}
+    int mid=l+r>>1;
+    build(p<<1,l,mid);
+    build(p<<1|1,mid+1,r);
+    mySegTree[p].len = mySegTree[p<<1].len + mySegTree[p<<1|1].len;
 }
-inline void push_up(ll p)
-{
-    ans[p]=ans[ls(p)]+ans[rs(p)];
-}
-void build(ll p,ll l,ll r)
-{
-    tag[p]=0;
-    if(l==r){ans[p]=a[l]; return;}
-    ll mid=(l+r)>>1;
-    build(ls(p),l,mid);
-    build(rs(p),mid+1,r);
-    push_up(p);
-} 
-inline void f(ll p,ll l,ll r,ll k)
-{
-    tag[p]=tag[p]+k;
-    ans[p]=ans[p]+k*(r-l+1);
-}
-inline void push_down(ll p,ll l,ll r)
-{
-    ll mid=(l+r)>>1;
-    f(ls(p),l,mid,tag[p]);
-    f(rs(p),mid+1,r,tag[p]);
-    tag[p]=0;
-}
-inline void update(ll nl,ll nr,ll l,ll r,ll p,ll k)
-{
-    if(nl<=l&&r<=nr)
-    {
-        ans[p]+=k*(r-l+1);
-        tag[p]+=k;
+inline void cover(int p,int l,int r,int x,int y){
+    if(x<=l&&y>=r){
+        mySegTree[p].is_covered++;
+        if(mySegTree[p].is_covered==1) mySegTree[p].covlen=mySegTree[p].len;
         return;
     }
-    push_down(p,l,r);
-    ll mid=(l+r)>>1;
-    if(nl<=mid)update(nl,nr,l,mid,ls(p),k);
-    if(nr>mid) update(nl,nr,mid+1,r,rs(p),k);
-    push_up(p);
+    int mid=l+r>>1;
+    if(x<=mid) cover(p<<1,l,mid,x,y);
+    if(y>mid) cover(p<<1|1,mid+1,r,x,y);
+    pushup(p);
 }
-ll query(ll q_x,ll q_y,ll l,ll r,ll p)
-{
-    ll res=0;
-    if(q_x<=l&&r<=q_y)return ans[p];
-    ll mid=(l+r)>>1;
-    push_down(p,l,r);
-    if(q_x<=mid)res+=query(q_x,q_y,l,mid,ls(p));
-    if(q_y>mid) res+=query(q_x,q_y,mid+1,r,rs(p));
-    return res;
+inline void del(int p,int l,int r,int x,int y){
+    if(x<=l&&r<=y){
+        mySegTree[p].is_covered--;
+        if(mySegTree[p].is_covered==0){
+            if(l==r) mySegTree[p].covlen = 0;
+            else pushup(p);
+        }
+        return;
+    }
+    int mid=l+r>>1;
+    if(x<=mid) del(p<<1,l,mid,x,y);
+    if(y>mid) del(p<<1|1,mid+1,r,x,y);
+    pushup(p);
 }
 /*
 int main()
@@ -117,16 +115,38 @@ int main()
     return 0;
 }
 */
+
+int search_left(int val, int l, int r){
+	if(val <= a[0]) return 0;
+	if(val == a[l]) return l;
+	if(l == r-1) return l;
+	int mid = (l+r)/2 - 1;
+	if(val > a[mid]) return search_left(val, mid+1, r);
+	else return search_left(val, l, mid+1);
+}
+
+int search_right(int val, int l, int r){
+	if(val >= a[n-1]) return n-1;
+	if(val == a[l]) return l;
+	if(l == r-1) return l - 1;
+	int mid = (l+r)/2 - 1;
+	if(val > a[mid]) return search_right(val, mid+1, r);
+	else return search_right(val, l, mid+1);
+}
+
 int main(int argc, char const *argv[])
 {
 	freopen("haybales.in","r",stdin);
-	//freopen("haybales.out","w",stdout);
+	freopen("haybales.out","w",stdout);
 	n = read();
 	q = read();
-	for(int i = 0;i<n;++i){
-		a[i] = read();
+	for(int i = 0;i<n;++i) a[i] = read();
+	sort(a, a+n);	
+	for(int i = 0;i<q;++i){
+		L[i] = read();
+		R[i] = read();
+		if(L[i] > a[n-1] || R[i] < a[0]) cout<<0<<endl;
+		else cout<<search_right(R[i],0,n) - search_left(L[i],0,n) + 1<<endl;
 	}
-	sort(a, a+n);
-	
 	return 0;
 }
