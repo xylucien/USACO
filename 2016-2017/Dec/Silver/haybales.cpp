@@ -49,72 +49,7 @@ inline int read(){
     while(ch>='0'&&ch<='9') x=x*10+ch-'0',ch=getchar();
     return x*sign;
 }
-long long n,q,a[N],L[N],R[N],num=0,m,ans=0;
-struct node{
-    int len,covlen,is_covered;
-}mySegTree[N<<4];
-inline void pushup(int p){
-    if(mySegTree[p].is_covered) return;
-    mySegTree[p].covlen = mySegTree[p<<1].covlen + mySegTree[p<<1|1].covlen;
-}
-inline void build(int p,int l,int r){
-    if(l==r){mySegTree[p].len=a[l+1]-a[l];return;}
-    int mid=l+r>>1;
-    build(p<<1,l,mid);
-    build(p<<1|1,mid+1,r);
-    mySegTree[p].len = mySegTree[p<<1].len + mySegTree[p<<1|1].len;
-}
-inline void cover(int p,int l,int r,int x,int y){
-    if(x<=l&&y>=r){
-        mySegTree[p].is_covered++;
-        if(mySegTree[p].is_covered==1) mySegTree[p].covlen=mySegTree[p].len;
-        return;
-    }
-    int mid=l+r>>1;
-    if(x<=mid) cover(p<<1,l,mid,x,y);
-    if(y>mid) cover(p<<1|1,mid+1,r,x,y);
-    pushup(p);
-}
-inline void del(int p,int l,int r,int x,int y){
-    if(x<=l&&r<=y){
-        mySegTree[p].is_covered--;
-        if(mySegTree[p].is_covered==0){
-            if(l==r) mySegTree[p].covlen = 0;
-            else pushup(p);
-        }
-        return;
-    }
-    int mid=l+r>>1;
-    if(x<=mid) del(p<<1,l,mid,x,y);
-    if(y>mid) del(p<<1|1,mid+1,r,x,y);
-    pushup(p);
-}
-/*
-int main()
-{
-    ll a1,b,c,d,e,f;
-    scan();
-    build(1,1,n);
-    while(m--)
-    {
-        scanf("%lld",&a1);
-        switch(a1)
-        {
-            case 1:{
-                scanf("%lld%lld%lld",&b,&c,&d);
-                update(b,c,1,n,1,d);
-                break;
-            }
-            case 2:{
-                scanf("%lld%lld",&e,&f);
-                printf("%lld\n",query(e,f,1,n,1));
-                break;
-            }
-        }
-    }
-    return 0;
-}
-*/
+long long n,q,a[N],L[N],R[N];
 
 int search_left(int val, int l, int r){
 	if(val <= a[0]) return 0;
