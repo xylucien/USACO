@@ -1,6 +1,6 @@
 /*
 ID: xinyu.l1
-TASK: 
+TASK: range
 LANG: C++                 
 */
 #include<set>  
@@ -23,6 +23,8 @@ LANG: C++
 
 using namespace std;
 const long long MAX = 2147483647;
+int n;
+bool myMap[251][251];
 inline int read(){
     int x=0, sign=1;
     char ch = getchar();
@@ -32,8 +34,9 @@ inline int read(){
 }
 int main(int argc, char const *argv[])
 {
-	freopen(".in","r",stdin);
-	freopen(".out","w",stdout);
+	freopen("range.in","r",stdin);
+	//freopen("range.out","w",stdout);
+	n = read();
 	
 	return 0;
 }

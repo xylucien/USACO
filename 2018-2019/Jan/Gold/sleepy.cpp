@@ -65,12 +65,6 @@ int size(struct node *N)
 	return N->size; 
 } 
 
-// A utility function to get maximum of two integers 
-int max(int a, int b) 
-{ 
-	return (a > b)? a : b; 
-} 
-
 /* Helper function that allocates a new node with the given key and 
 	NULL left and right pointers. */
 struct node* newNode(int key) 
@@ -142,19 +136,13 @@ int getBalance(struct node *N)
 struct node* insert(struct node* node, int key, int *count) 
 { 
 	/* 1. Perform the normal BST rotation */
-	if (node == NULL) 
-		return(newNode(key)); 
-
-	if (key < node->key) 
-		node->left = insert(node->left, key, count); 
-	else
-	{ 
+	if(node == NULL) return(newNode(key)); 
+	if(key < node->key) node->left = insert(node->left, key, count); 
+	else{ 
 		node->right = insert(node->right, key, count); 
-
 		// UPDATE COUNT OF SMALLER ELEMENTS FOR KEY 
 		*count = *count + size(node->left) + 1; 
 	} 
-
 
 	/* 2. Update height and size of this ancestor node */
 	node->height = max(height(node->left), height(node->right)) + 1; 
@@ -165,29 +153,20 @@ struct node* insert(struct node* node, int key, int *count)
 	int balance = getBalance(node); 
 
 	// If this node becomes unbalanced, then there are 4 cases 
-
 	// Left Left Case 
-	if (balance > 1 && key < node->left->key) 
-		return rightRotate(node); 
-
+	if (balance > 1 && key < node->left->key) return rightRotate(node); 
 	// Right Right Case 
-	if (balance < -1 && key > node->right->key) 
-		return leftRotate(node); 
-
+	if (balance < -1 && key > node->right->key) return leftRotate(node); 
 	// Left Right Case 
-	if (balance > 1 && key > node->left->key) 
-	{ 
+	if (balance > 1 && key > node->left->key){ 
 		node->left = leftRotate(node->left); 
 		return rightRotate(node); 
 	} 
-
 	// Right Left Case 
-	if (balance < -1 && key < node->right->key) 
-	{ 
+	if (balance < -1 && key < node->right->key){ 
 		node->right = rightRotate(node->right); 
 		return leftRotate(node); 
 	} 
-
 	return node; 
 } 
 
@@ -195,19 +174,10 @@ struct node* insert(struct node* node, int key, int *count)
 // smaller elements on right side. 
 void constructLowerArray (int arr[], int countSmaller[], int n) 
 { 
-int i, j; 
-struct node *root = NULL; 
-
-// initialize all the counts in countSmaller array as 0 
-for (i = 0; i < n; i++) 
-	countSmaller[i] = 0; 
-
-// Starting from rightmost element, insert all elements one by one in 
-// an AVL tree and get the count of smaller elements 
-for (i = n-1; i >= 0; i--) 
-{ 
-	root = insert(root, arr[i], &countSmaller[i]); 
-} 
+	int i, j; 
+	struct node *root = NULL; 
+	for(i = 0;i<n;++i) countSmaller[i] = 0; 
+	for(i = n-1;i>=0;--i) root = insert(root, arr[i], &countSmaller[i]);
 } 
 
 int main(int argc, char const *argv[])
