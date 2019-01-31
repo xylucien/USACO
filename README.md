@@ -1,6 +1,6 @@
 # USACO
 Lucien's repository for USACO training codes.
-I am currently at Gold division. Training hard for Plantinum!
+Currently at Gold division. Training hard for Platinum!
 
 http://train.usaco.org
 http://usaco.org
