@@ -133,10 +133,10 @@ int main()
     int x1,x2,y1,y2;
     n = read();
     k = read();
-    if(n==3 && k == 2){
-    	cout<<26<<endl;
-    	return 0;
-    }
+    // if(n==3 && k == 2){
+    // 	cout<<26<<endl;
+    // 	return 0;
+    // }
     int cnt = -1;
     for(int i=0;i<n;++i){
         x1 = read();
@@ -172,15 +172,15 @@ int main()
     int area = 0;
     srand(20011129+xmin);
     for(int i=0;i<=cnt;i++){
-        if((double)clock() / CLOCKS_PER_SEC >= 1.798){
-        	cout<<39999<<endl;
-        	return 0;
-        }
+        // if((double)clock() / CLOCKS_PER_SEC >= 1.798){
+        // 	cout<<39999<<endl;
+        // 	return 0;
+        // }
         area+=Insert_query(1,line[i].x,line[i].y_down,line[i].y_up,line[i].flag);
         area2+=Insert_query2(1,line2[i].x,line2[i].y_down,line2[i].y_up,line2[i].flag);
     }
-    if(k==2) printf("%d\n",area+area2);
-    else printf("%d\n",area);
-    
+    // if(k==2) printf("%d\n",area+area2);
+    // else printf("%d\n",area);
+    printf("%d\n", area);
     return 0;
 }

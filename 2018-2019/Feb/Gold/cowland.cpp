@@ -71,7 +71,7 @@ int getLCA(int a,int b)
 {
     if(depth[a] < depth[b]) swap(a,b);
     int diff = depth[a] - depth[b];
-    for(int i=0;i<20;i++){
+    for(int i=0;i<20;++i){
         if((diff>>i)&1)
         a=f[a][i];
     }

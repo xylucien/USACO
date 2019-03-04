@@ -38,11 +38,6 @@ inline int read(){
     return x*sign;
 }
 
-int search(int x){
-	if(x > counter_base[myMapLength-1]) return myMapLength;
-	else return lower_bound(counter_base, counter_base + myMapLength, x) - counter_base;
-}
-
 int main(int argc, char const *argv[])
 {
 	freopen("dishes.in","r",stdin);
@@ -51,17 +46,12 @@ int main(int argc, char const *argv[])
 	n = read();
 	for(int i = 0;i<n;++i) plate[i] = read();
 
-	counter[0].push_back(plate[0]);
-	counter_base[0] = plate[0];
-	++myMapLength;
-
-	for(int i = 1;i<n;++i){
+	for(int i = 0;i<n;++i){
 		if(plate[i] < clean){
 			cout<<i<<endl;
 			return 0;
 		}
-		int newPointer = search(plate[i]);
-		//int newPointer = lower_bound(counter_base, counter_base + myMapLength, plate[i]) - counter_base;
+		int newPointer = lower_bound(counter_base, counter_base + myMapLength, plate[i]) - counter_base;
 		if(newPointer == myMapLength){
 			counter[myMapLength].push_back(plate[i]);
 			counter_base[myMapLength] = plate[i];
